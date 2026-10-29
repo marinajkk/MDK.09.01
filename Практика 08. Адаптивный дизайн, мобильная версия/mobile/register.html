@@ -1,0 +1,53 @@
+<html lang="ru"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Регистрация</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../../app/static/css/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="#">Конференции.РФ</a>
+    <button class="burger" type="button" aria-label="Меню" aria-expanded="false"><span></span><span></span><span></span></button>
+    <nav class="menu">
+      <a href="#">Мероприятия</a>
+      
+        <a href="#">Войти</a>
+        <a href="#">Регистрация</a>
+      
+    </nav>
+  </header>
+  <main>
+    
+    
+<h1>Регистрация</h1>
+<form method="post" class="form">
+  
+  <label>Логин
+    <input name="login" required="" minlength="3" maxlength="20" pattern="[A-Za-z0-9_]+" value="">
+    
+  </label>
+  <label>ФИО
+    <input name="full_name" required="" minlength="5" maxlength="100" value="">
+    
+  </label>
+  <label>Пароль
+    <input name="password" type="password" required="" minlength="8" maxlength="128">
+    
+  </label>
+  <label>Почта
+    <input name="email" type="email" required="" maxlength="100" value="">
+    
+  </label>
+  <label>Телефон
+    <input name="phone" type="tel" required="" maxlength="16" value="" placeholder="+79991234567">
+    
+  </label>
+  <button class="btn" type="submit">Зарегистрироваться</button>
+</form>
+
+  </main>
+  <footer class="footer">Конференции.РФ. Учебный проект, МДК 09.01</footer>
+  <script src="../../app/static/js/nav.js"></script>
+
+</body></html>
