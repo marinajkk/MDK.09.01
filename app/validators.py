@@ -1,5 +1,14 @@
 import re
 
+CONTROL_RE = re.compile(r"[\x00-\x08\x0b-\x1f\x7f]")
+SPACES_RE = re.compile(r"[ \t]+")
+
+
+def clean(value, limit=200):
+    value = CONTROL_RE.sub("", value or "")
+    return SPACES_RE.sub(" ", value).strip()[:limit]
+
+
 LOGIN_RE = re.compile(r"^[A-Za-z0-9_]{3,20}$")
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$")
 PHONE_RE = re.compile(r"^(\+7|8)\d{10}$")
@@ -11,7 +20,7 @@ class FormValidator:
         self.errors = {}
 
     def field(self, name):
-        return (self.data.get(name) or "").strip()
+        return clean(self.data.get(name))
 
     def fail(self, name, text):
         self.errors.setdefault(name, text)
@@ -35,8 +44,8 @@ class RegisterForm(FormValidator):
             self.fail("login", "Такой логин уже занят")
         if len(self.field("full_name")) < 5:
             self.fail("full_name", "Введите фамилию, имя и отчество")
-        if len(self.data.get("password") or "") < 8:
-            self.fail("password", "Пароль должен быть не короче 8 символов")
+        if not 8 <= len(self.data.get("password") or "") <= 128:
+            self.fail("password", "Пароль должен быть не короче 8 символов (не больше 128)")
         if not EMAIL_RE.match(self.field("email")):
             self.fail("email", "Введите почту в формате name@example.ru")
         phone = self.field("phone").replace(" ", "").replace("-", "")

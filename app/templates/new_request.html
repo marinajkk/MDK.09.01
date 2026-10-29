@@ -2,9 +2,10 @@
 {% block title %}Новая заявка{% endblock %}
 {% block content %}
 <h1>Новая заявка</h1>
-<form method="post" class="form" novalidate>
+<form method="post" class="form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   <label>Мероприятие
-    <select name="event_id">
+    <select name="event_id" required>
       <option value="">Выберите</option>
       {% for e in events %}
       <option value="{{ e['id'] }}" {% if selected == e['id']|string %}selected{% endif %}>{{ e['title'] }} ({{ e['event_date'] }})</option>
@@ -13,15 +14,15 @@
     {% if errors.event_id %}<span class="err">{{ errors.event_id }}</span>{% endif %}
   </label>
   <label>Помещение
-    <input name="room" value="{{ values.get('room', '') }}">
+    <input name="room" required minlength="2" maxlength="50" value="{{ values.get('room', '') }}">
     {% if errors.room %}<span class="err">{{ errors.room }}</span>{% endif %}
   </label>
   <label>Способ оплаты
-    <input name="payment" value="{{ values.get('payment', '') }}">
+    <input name="payment" required minlength="2" maxlength="30" value="{{ values.get('payment', '') }}">
     {% if errors.payment %}<span class="err">{{ errors.payment }}</span>{% endif %}
   </label>
   <label>Количество мест
-    <input name="seats" value="{{ values.get('seats', '1') }}">
+    <input name="seats" type="number" min="1" max="50" required value="{{ values.get('seats', '1') }}">
     {% if errors.seats %}<span class="err">{{ errors.seats }}</span>{% endif %}
   </label>
   <button class="btn" type="submit">Отправить заявку</button>
