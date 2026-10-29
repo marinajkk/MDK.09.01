@@ -1,7 +1,7 @@
 from flask import Blueprint, abort, current_app, flash, redirect, render_template, request, url_for
 
 from .security import admin_required
-from .validators import clean
+from .validators import clean, to_int
 
 bp = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -17,7 +17,7 @@ def index():
     search = clean(request.args.get("q", ""), 50)
     items = app.requests_repo.all(
         status if status in STATUSES else None,
-        int(event_id) if event_id.isdigit() else None,
+        to_int(event_id),
         search or None,
     )
     return render_template("admin.html", items=items, events=app.events.all(), statuses=STATUSES,
