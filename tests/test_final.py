@@ -40,3 +40,14 @@ def test_superscript_digit_in_rating_gives_error_not_500(client, app):
     app.requests_repo.set_status(1, "завершено")
     resp = post(client, "/requests/1/review", {"rating": "²", "body": "Нормальный отзыв"}, "/requests/1/review")
     assert resp.status_code == 200
+
+
+def test_login_that_differs_only_in_case_is_taken(client):
+    register(client)
+    html = register(client, login="MARINA_K", email="x@example.ru").get_data(as_text=True)
+    assert "уже занят" in html
+
+
+def test_login_is_case_insensitive_on_sign_in(client):
+    register(client)
+    assert login(client, "Marina_K").status_code == 302

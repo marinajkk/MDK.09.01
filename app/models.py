@@ -12,7 +12,7 @@ class UserRepository:
         )
 
     def by_login(self, login):
-        return self.db.one("SELECT * FROM users WHERE login = ?", (login,))
+        return self.db.one("SELECT * FROM users WHERE login = ? COLLATE NOCASE", (login,))
 
     def by_id(self, user_id):
         return self.db.one("SELECT * FROM users WHERE id = ?", (user_id,))
