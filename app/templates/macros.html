@@ -1,0 +1,3 @@
+{% macro badge(status) %}
+<span class="badge {{ {'новая': 'new', 'назначено': 'assigned', 'завершено': 'done'}.get(status, 'new') }}">{{ status }}</span>
+{% endmacro %}

@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block title %}{{ event['title'] }}{% endblock %}
 {% block content %}
+<img class="event-photo" src="{{ url_for('static', filename='img/ev' ~ event['id'] ~ '.jpg') }}" alt="{{ event['title'] }}">
 <h1>{{ event['title'] }}</h1>
-<p>Дата: {{ event['event_date'] }}</p>
-<p>Место: {{ event['place'] }}</p>
+<p><span class="chip">{{ event['event_date'] }}</span> <span class="muted">{{ event['place'] }}</span></p>
 <p>{{ event['description'] }}</p>
 <p><a class="btn" href="{{ url_for('main.new_request', event_id=event['id']) }}">Подать заявку</a></p>
 {% endblock %}

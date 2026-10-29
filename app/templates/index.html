@@ -1,12 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Ближайшие мероприятия</h1>
-<ul class="events">
+<section class="hero">
+  <div>
+    <h1>Конференции, форумы и семинары в одном месте</h1>
+    <p>Выберите мероприятие, подайте заявку и следите за её статусом.</p>
+    {% if not g.user %}<a class="btn light" href="{{ url_for('auth.register') }}">Зарегистрироваться</a>{% else %}<a class="btn light" href="{{ url_for('main.new_request') }}">Подать заявку</a>{% endif %}
+  </div>
+</section>
+
+<h2 class="page-title">Ближайшие мероприятия</h2>
+<div class="cards">
   {% for e in events %}
-  <li>
-    <h2><a href="{{ url_for('main.event', event_id=e['id']) }}">{{ e['title'] }}</a></h2>
-    <p>{{ e['event_date'] }}, {{ e['place'] }}</p>
-  </li>
+  <article class="card">
+    <img src="{{ url_for('static', filename='img/ev' ~ e['id'] ~ '.jpg') }}" alt="{{ e['title'] }}" loading="lazy">
+    <div class="card-body">
+      <span class="chip">{{ e['event_date'] }}</span>
+      <h2><a href="{{ url_for('main.event', event_id=e['id']) }}">{{ e['title'] }}</a></h2>
+      <p class="muted">{{ e['place'] }}</p>
+      <a class="btn ghost" href="{{ url_for('main.event', event_id=e['id']) }}">Подробнее</a>
+    </div>
+  </article>
   {% endfor %}
-</ul>
+</div>
 {% endblock %}
