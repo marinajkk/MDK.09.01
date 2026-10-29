@@ -60,6 +60,24 @@ class RequestRepository:
     def get(self, request_id):
         return self.db.one(self.BASE + "WHERE r.id = ?", (request_id,))
 
+    FLOW = {"новая": "назначено", "назначено": "завершено"}
+
+    def set_status(self, request_id, name):
+        status = self.db.one("SELECT id FROM statuses WHERE name = ?", (name,))
+        self.db.execute("UPDATE requests SET status_id = ? WHERE id = ?", (status["id"], request_id))
+
+    def update(self, request_id, room, payment, seats):
+        self.db.execute("UPDATE requests SET room = ?, payment = ?, seats = ? WHERE id = ?", (room, payment, seats, request_id))
+
+    def delete(self, request_id):
+        con = self.db.connect()
+        try:
+            con.execute("DELETE FROM reviews WHERE request_id = ?", (request_id,))
+            con.execute("DELETE FROM requests WHERE id = ?", (request_id,))
+            con.commit()
+        finally:
+            con.close()
+
     def all(self, status=None, event_id=None, search=None):
         sql, args, where = self.BASE, [], []
         if status:

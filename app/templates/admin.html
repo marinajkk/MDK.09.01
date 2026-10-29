@@ -32,6 +32,14 @@
       <p class="muted">{{ r['user_name'] }}</p>
       <p class="muted">{{ r['room'] }}, {{ r['payment'] }}, мест: {{ r['seats'] }}</p>
       <p class="muted">Создана {{ r['created_at'] }}</p>
+      <div class="actions">
+        {% if r['status'] == 'новая' %}
+        <form method="post" action="{{ url_for('admin.next_status', request_id=r['id']) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn" type="submit">Назначить</button></form>
+        {% elif r['status'] == 'назначено' %}
+        <form method="post" action="{{ url_for('admin.next_status', request_id=r['id']) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn" type="submit">Завершить</button></form>
+        {% endif %}
+        <form method="post" action="{{ url_for('admin.delete', request_id=r['id']) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn ghost danger" type="submit">Удалить</button></form>
+      </div>
     </div>
   </article>
   {% else %}

@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app, render_template, request
+from flask import Blueprint, abort, current_app, flash, redirect, render_template, request, url_for
 
 from .security import admin_required
 from .validators import clean
@@ -22,3 +22,28 @@ def index():
     )
     return render_template("admin.html", items=items, events=app.events.all(), statuses=STATUSES,
                            status=status, event_id=event_id, search=search)
+
+
+@bp.route("/requests/<int:request_id>/next", methods=["POST"])
+@admin_required
+def next_status(request_id):
+    repo = current_app.requests_repo
+    item = repo.get(request_id)
+    if not item:
+        abort(404)
+    new = repo.FLOW.get(item["status"])
+    if not new:
+        abort(400)
+    repo.set_status(request_id, new)
+    flash("Заявка № %d: статус «%s»" % (request_id, new))
+    return redirect(url_for("admin.index"))
+
+
+@bp.route("/requests/<int:request_id>/delete", methods=["POST"])
+@admin_required
+def delete(request_id):
+    if not current_app.requests_repo.get(request_id):
+        abort(404)
+    current_app.requests_repo.delete(request_id)
+    flash("Заявка № %d удалена" % request_id)
+    return redirect(url_for("admin.index"))
