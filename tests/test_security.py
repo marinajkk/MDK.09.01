@@ -74,3 +74,9 @@ def test_html_in_form_is_escaped(client):
 
 def test_logout_by_get_is_not_allowed(client):
     assert client.get("/logout").status_code == 405
+
+
+def test_secret_key_is_generated_when_not_set(tmp_path):
+    from app import create_app
+    app = create_app({"DATABASE": str(tmp_path / "x.db")})
+    assert len(app.config["SECRET_KEY"]) >= 32

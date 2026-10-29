@@ -15,7 +15,7 @@ def create_app(config=None):
     if config:
         app.config.update(config)
 
-    if "SECRET_KEY" not in app.config:
+    if not app.config.get("SECRET_KEY"):
         app.config["SECRET_KEY"] = load_secret_key(app.instance_path)
 
     app.db = Database(app.config["DATABASE"])
