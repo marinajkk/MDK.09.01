@@ -53,7 +53,40 @@ class RequestRepository:
         )
 
     def by_user(self, user_id):
-        return self.db.query(self.BASE + "WHERE r.user_id = ? ORDER BY r.id DESC", (user_id,))
+        return self.db.query(
+            "SELECT * FROM (" + self.BASE + ") q LEFT JOIN (SELECT request_id AS reviewed_id FROM reviews) rv ON rv.reviewed_id = q.id "
+            "WHERE q.user_id = ? ORDER BY q.id DESC", (user_id,))
 
-    def all(self):
-        return self.db.query(self.BASE + "ORDER BY r.id DESC")
+    def get(self, request_id):
+        return self.db.one(self.BASE + "WHERE r.id = ?", (request_id,))
+
+    def all(self, status=None, event_id=None, search=None):
+        sql, args, where = self.BASE, [], []
+        if status:
+            where.append("s.name = ?")
+            args.append(status)
+        if event_id:
+            where.append("r.event_id = ?")
+            args.append(event_id)
+        if search:
+            where.append("u.full_name LIKE ?")
+            args.append("%" + search + "%")
+        if where:
+            sql += "WHERE " + " AND ".join(where) + " "
+        return self.db.query(sql + "ORDER BY r.id DESC", args)
+
+
+class ReviewRepository:
+    def __init__(self, db):
+        self.db = db
+
+    def create(self, request_id, body, rating):
+        return self.db.execute("INSERT INTO reviews (request_id, body, rating) VALUES (?, ?, ?)", (request_id, body, rating))
+
+    def by_request(self, request_id):
+        return self.db.one("SELECT * FROM reviews WHERE request_id = ?", (request_id,))
+
+    def by_event(self, event_id):
+        return self.db.query(
+            "SELECT rv.*, u.full_name FROM reviews rv JOIN requests r ON r.id = rv.request_id "
+            "JOIN users u ON u.id = r.user_id WHERE r.event_id = ? ORDER BY rv.id DESC", (event_id,))

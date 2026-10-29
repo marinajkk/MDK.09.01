@@ -3,21 +3,39 @@
 {% block title %}Панель администратора{% endblock %}
 {% block content %}
 <h1>Все заявки</h1>
-<table>
-  <thead><tr><th>№</th><th>Участник</th><th>Мероприятие</th><th>Помещение</th><th>Оплата</th><th>Мест</th><th>Статус</th><th>Создана</th></tr></thead>
-  <tbody>
+<form class="filters" method="get">
+  <label>Статус
+    <select name="status">
+      <option value="">Все</option>
+      {% for s in statuses %}<option {% if status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Мероприятие
+    <select name="event_id">
+      <option value="">Все</option>
+      {% for e in events %}<option value="{{ e['id'] }}" {% if event_id == e['id']|string %}selected{% endif %}>{{ e['title'] }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Участник
+    <input name="q" value="{{ search }}" placeholder="Часть ФИО" maxlength="50">
+  </label>
+  <button class="btn" type="submit">Найти</button>
+  <a class="btn ghost" href="{{ url_for('admin.index') }}">Сбросить</a>
+</form>
+<p class="muted">Найдено заявок: {{ items|length }}</p>
+<div class="cards">
   {% for r in items %}
-  <tr>
-    <td data-label="№">{{ r['id'] }}</td>
-    <td data-label="Участник">{{ r['user_name'] }}</td>
-    <td data-label="Мероприятие">{{ r['event_title'] }}</td>
-    <td data-label="Помещение">{{ r['room'] }}</td>
-    <td data-label="Оплата">{{ r['payment'] }}</td>
-    <td data-label="Мест">{{ r['seats'] }}</td>
-    <td data-label="Статус">{{ badge(r['status']) }}</td>
-    <td data-label="Создана">{{ r['created_at'] }}</td>
-  </tr>
+  <article class="card req-card">
+    <div class="card-body">
+      <div class="req-head"><strong>№ {{ r['id'] }}</strong> {{ badge(r['status']) }}</div>
+      <h2>{{ r['event_title'] }}</h2>
+      <p class="muted">{{ r['user_name'] }}</p>
+      <p class="muted">{{ r['room'] }}, {{ r['payment'] }}, мест: {{ r['seats'] }}</p>
+      <p class="muted">Создана {{ r['created_at'] }}</p>
+    </div>
+  </article>
+  {% else %}
+  <p>По таким условиям заявок нет.</p>
   {% endfor %}
-  </tbody>
-</table>
+</div>
 {% endblock %}
