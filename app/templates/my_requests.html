@@ -5,7 +5,7 @@
 <h1>Мои заявки</h1>
 {% if items %}
 <table>
-  <thead><tr><th>№</th><th>Мероприятие</th><th>Помещение</th><th>Оплата</th><th>Мест</th><th>Статус</th></tr></thead>
+  <thead><tr><th>№</th><th>Мероприятие</th><th>Помещение</th><th>Оплата</th><th>Мест</th><th>Статус</th><th></th></tr></thead>
   <tbody>
   {% for r in items %}
   <tr>
@@ -15,6 +15,10 @@
     <td data-label="Оплата">{{ r['payment'] }}</td>
     <td data-label="Мест">{{ r['seats'] }}</td>
     <td data-label="Статус">{{ badge(r['status']) }}</td>
+    <td class="action">
+      {% if r['status'] == 'завершено' and not r['reviewed_id'] %}<a class="btn ghost" href="{{ url_for('main.review', request_id=r['id']) }}">Оставить отзыв</a>
+      {% elif r['reviewed_id'] %}<span class="muted">Отзыв отправлен</span>{% endif %}
+    </td>
   </tr>
   {% endfor %}
   </tbody>

@@ -6,4 +6,13 @@
 <p><span class="chip">{{ event['event_date'] }}</span> <span class="muted">{{ event['place'] }}</span></p>
 <p>{{ event['description'] }}</p>
 <p><a class="btn" href="{{ url_for('main.new_request', event_id=event['id']) }}">Подать заявку</a></p>
+{% if reviews %}
+<h2>Отзывы участников</h2>
+{% for rv in reviews %}
+<blockquote class="review">
+  <p><strong>{{ rv['rating'] }} из 5</strong>, {{ rv['full_name'] }}</p>
+  <p>{{ rv['body'] }}</p>
+</blockquote>
+{% endfor %}
+{% endif %}
 {% endblock %}

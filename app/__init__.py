@@ -4,7 +4,7 @@ from flask import Flask, g, render_template, session
 
 from .db import Database
 from .security import init_security, load_secret_key
-from .models import EventRepository, RequestRepository, UserRepository
+from .models import EventRepository, RequestRepository, ReviewRepository, UserRepository
 
 
 def create_app(config=None):
@@ -23,6 +23,7 @@ def create_app(config=None):
     app.users = UserRepository(app.db)
     app.events = EventRepository(app.db)
     app.requests_repo = RequestRepository(app.db)
+    app.reviews = ReviewRepository(app.db)
 
     @app.before_request
     def load_user():
