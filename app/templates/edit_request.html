@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Изменение заявки{% endblock %}
+{% block content %}
+<h1>Изменение заявки № {{ item['id'] }}</h1>
+<p class="muted">{{ item['event_title'] }}</p>
+<form method="post" class="form" data-validate novalidate>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label>Помещение
+    <select name="room" required>
+      {% for r in rooms %}<option {% if values['room'] == r %}selected{% endif %}>{{ r }}</option>{% endfor %}
+    </select>
+    {% if errors.room %}<span class="err">{{ errors.room }}</span>{% endif %}
+  </label>
+  <label>Способ оплаты
+    <select name="payment" required>
+      {% for p in payments %}<option {% if values['payment'] == p %}selected{% endif %}>{{ p }}</option>{% endfor %}
+    </select>
+    {% if errors.payment %}<span class="err">{{ errors.payment }}</span>{% endif %}
+  </label>
+  <label>Количество мест
+    <input name="seats" type="number" min="1" max="50" required value="{{ values['seats'] }}">
+    {% if errors.seats %}<span class="err">{{ errors.seats }}</span>{% endif %}
+  </label>
+  <button class="btn" type="submit">Сохранить</button>
+  <a class="btn ghost" href="{{ url_for('main.my_requests') }}">Назад</a>
+</form>
+{% endblock %}

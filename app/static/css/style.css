@@ -161,3 +161,10 @@ main { animation: appear .25s ease both; }
 .form select[aria-invalid], .form input[aria-invalid], .form textarea[aria-invalid] { border-color: #b3261e; }
 td.action { white-space: nowrap; }
 @media (max-width: 640px) { .filters label, .filters select, .filters input { width: 100%; } td.action { display: block; } }
+
+/* ПР 11: действия над заявками */
+.actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.actions form, form.inline { display: inline; margin: 0; }
+.btn.danger { color: #b3261e; border-color: #b3261e; }
+.btn.danger:hover { background: #fbe9e7; }
+td.action .btn { padding: 6px 12px; font-size: 14px; }

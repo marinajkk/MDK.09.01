@@ -1,7 +1,7 @@
 from flask import Blueprint, abort, current_app, flash, g, redirect, render_template, request, url_for
 
 from .security import login_required
-from .validators import PAYMENTS, ROOMS, RequestForm, ReviewForm, clean
+from .validators import PAYMENTS, ROOMS, EditRequestForm, RequestForm, ReviewForm, clean
 
 bp = Blueprint("main", __name__)
 
@@ -65,3 +65,36 @@ def review(request_id):
         return redirect(url_for("main.my_requests"))
     errors = form.errors if request.method == "POST" else {}
     return render_template("review.html", item=item, errors=errors, values=request.form)
+
+
+def own_new_request(request_id):
+    item = current_app.requests_repo.get(request_id)
+    if not item or item["user_id"] != g.user["id"]:
+        abort(404)
+    if item["status"] != "новая":
+        abort(403)
+    return item
+
+
+@bp.route("/requests/<int:request_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_request(request_id):
+    item = own_new_request(request_id)
+    form = EditRequestForm(request.form)
+    if request.method == "POST" and form.ok:
+        current_app.requests_repo.update(
+            request_id, clean(request.form["room"], 50), clean(request.form["payment"], 30), int(request.form["seats"]))
+        flash("Заявка изменена")
+        return redirect(url_for("main.my_requests"))
+    errors = form.errors if request.method == "POST" else {}
+    values = request.form if request.method == "POST" else item
+    return render_template("edit_request.html", item=item, errors=errors, values=values, rooms=ROOMS, payments=PAYMENTS)
+
+
+@bp.route("/requests/<int:request_id>/delete", methods=["POST"])
+@login_required
+def delete_request(request_id):
+    own_new_request(request_id)
+    current_app.requests_repo.delete(request_id)
+    flash("Заявка отменена")
+    return redirect(url_for("main.my_requests"))

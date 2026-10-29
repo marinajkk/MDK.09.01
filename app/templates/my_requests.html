@@ -16,8 +16,14 @@
     <td data-label="Мест">{{ r['seats'] }}</td>
     <td data-label="Статус">{{ badge(r['status']) }}</td>
     <td class="action">
-      {% if r['status'] == 'завершено' and not r['reviewed_id'] %}<a class="btn ghost" href="{{ url_for('main.review', request_id=r['id']) }}">Оставить отзыв</a>
-      {% elif r['reviewed_id'] %}<span class="muted">Отзыв отправлен</span>{% endif %}
+      {% if r['status'] == 'новая' %}
+      <a class="btn ghost" href="{{ url_for('main.edit_request', request_id=r['id']) }}">Изменить</a>
+      <form class="inline" method="post" action="{{ url_for('main.delete_request', request_id=r['id']) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn ghost danger" type="submit">Отменить</button>
+      </form>
+      {% elif r['status'] == 'завершено' and not r['reviewed_id'] %}<a class="btn ghost" href="{{ url_for('main.review', request_id=r['id']) }}">Оставить отзыв</a>
+      {% endif %}
+      {% if r['reviewed_id'] %}<span class="muted">Отзыв отправлен</span>{% endif %}
     </td>
   </tr>
   {% endfor %}

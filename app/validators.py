@@ -76,6 +76,18 @@ class RequestForm(FormValidator):
             self.fail("seats", "Количество мест: от 1 до 50")
 
 
+class EditRequestForm(FormValidator):
+    def __init__(self, data):
+        super().__init__(data)
+        if self.field("room") not in ROOMS:
+            self.fail("room", "Выберите помещение из списка")
+        if self.field("payment") not in PAYMENTS:
+            self.fail("payment", "Выберите способ оплаты из списка")
+        seats = self.field("seats")
+        if not seats.isdigit() or not 1 <= int(seats) <= 50:
+            self.fail("seats", "Количество мест: от 1 до 50")
+
+
 class ReviewForm(FormValidator):
     def __init__(self, data):
         super().__init__(data)
