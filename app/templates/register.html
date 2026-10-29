@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Регистрация{% endblock %}
+{% block content %}
+<h1>Регистрация</h1>
+<form method="post" class="form" novalidate>
+  <label>Логин
+    <input name="login" value="{{ values.get('login', '') }}">
+    {% if errors.login %}<span class="err">{{ errors.login }}</span>{% endif %}
+  </label>
+  <label>ФИО
+    <input name="full_name" value="{{ values.get('full_name', '') }}">
+    {% if errors.full_name %}<span class="err">{{ errors.full_name }}</span>{% endif %}
+  </label>
+  <label>Пароль
+    <input name="password" type="password">
+    {% if errors.password %}<span class="err">{{ errors.password }}</span>{% endif %}
+  </label>
+  <label>Почта
+    <input name="email" value="{{ values.get('email', '') }}">
+    {% if errors.email %}<span class="err">{{ errors.email }}</span>{% endif %}
+  </label>
+  <label>Телефон
+    <input name="phone" value="{{ values.get('phone', '') }}" placeholder="+79991234567">
+    {% if errors.phone %}<span class="err">{{ errors.phone }}</span>{% endif %}
+  </label>
+  <button class="btn" type="submit">Зарегистрироваться</button>
+</form>
+{% endblock %}
