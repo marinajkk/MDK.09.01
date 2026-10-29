@@ -1,10 +1,11 @@
-from flask import Blueprint, abort, current_app, g, render_template
+from flask import Blueprint, current_app, render_template
+
+from .security import admin_required
 
 bp = Blueprint("admin", __name__, url_prefix="/admin")
 
 
 @bp.route("/")
+@admin_required
 def index():
-    if not g.user or g.user["role"] != "admin":
-        abort(403)
     return render_template("admin.html", items=current_app.requests_repo.all())

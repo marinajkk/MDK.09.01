@@ -1,6 +1,7 @@
 from flask import Blueprint, current_app, flash, redirect, render_template, request, session, url_for
 
-from .validators import RegisterForm
+from .security import login_required
+from .validators import RegisterForm, clean
 
 bp = Blueprint("auth", __name__)
 
@@ -10,12 +11,12 @@ def register():
     app = current_app
     form = RegisterForm(request.form, app.users)
     if request.method == "POST" and form.ok:
-        phone = request.form["phone"].replace(" ", "").replace("-", "")
+        phone = clean(request.form["phone"]).replace(" ", "").replace("-", "")
         app.users.create(
-            request.form["login"].strip(),
-            request.form["full_name"].strip(),
+            clean(request.form["login"]),
+            clean(request.form["full_name"], 100),
             request.form["password"],
-            request.form["email"].strip(),
+            clean(request.form["email"], 100),
             phone,
         )
         flash("Регистрация прошла успешно, теперь войдите")
@@ -28,16 +29,24 @@ def register():
 def login():
     error = None
     if request.method == "POST":
-        user = current_app.users.authenticate(request.form.get("login", "").strip(), request.form.get("password", ""))
+        name = request.form.get("login", "").strip()[:20]
+        limiter = current_app.limiter
+        if limiter.locked(name):
+            return render_template("login.html", error="Слишком много попыток входа, повторите через 10 минут"), 429
+        user = current_app.users.authenticate(name, request.form.get("password", ""))
         if user:
+            limiter.reset(name)
             session.clear()
+            session.permanent = True
             session["user_id"] = user["id"]
             return redirect(url_for("admin.index") if user["role"] == "admin" else url_for("main.my_requests"))
+        limiter.fail(name)
         error = "Неверный логин или пароль"
     return render_template("login.html", error=error)
 
 
-@bp.route("/logout")
+@bp.route("/logout", methods=["POST"])
+@login_required
 def logout():
     session.clear()
     return redirect(url_for("main.index"))

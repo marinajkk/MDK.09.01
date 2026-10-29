@@ -1,6 +1,7 @@
 from flask import Blueprint, abort, current_app, flash, g, redirect, render_template, request, url_for
 
-from .validators import RequestForm
+from .security import login_required
+from .validators import RequestForm, clean
 
 bp = Blueprint("main", __name__)
 
@@ -19,25 +20,23 @@ def event(event_id):
 
 
 @bp.route("/requests")
+@login_required
 def my_requests():
-    if not g.user:
-        return redirect(url_for("auth.login"))
     items = current_app.requests_repo.by_user(g.user["id"])
     return render_template("my_requests.html", items=items)
 
 
 @bp.route("/requests/new", methods=["GET", "POST"])
+@login_required
 def new_request():
-    if not g.user:
-        return redirect(url_for("auth.login"))
     app = current_app
     form = RequestForm(request.form, app.events)
     if request.method == "POST" and form.ok:
         app.requests_repo.create(
             g.user["id"],
             int(request.form["event_id"]),
-            request.form["room"].strip(),
-            request.form["payment"].strip(),
+            clean(request.form["room"], 50),
+            clean(request.form["payment"], 30),
             int(request.form["seats"]),
         )
         flash("Заявка отправлена")
