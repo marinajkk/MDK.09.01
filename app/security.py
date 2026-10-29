@@ -34,7 +34,7 @@ def check_csrf():
         return
     sent = request.form.get("csrf_token", "")
     saved = session.get("csrf")
-    if not saved or not secrets.compare_digest(sent, saved):
+    if not saved or not secrets.compare_digest(sent.encode("utf-8"), saved.encode("utf-8")):
         abort(400, "Неверный токен формы")
 
 

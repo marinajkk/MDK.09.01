@@ -80,3 +80,9 @@ def test_secret_key_is_generated_when_not_set(tmp_path):
     from app import create_app
     app = create_app({"DATABASE": str(tmp_path / "x.db")})
     assert len(app.config["SECRET_KEY"]) >= 32
+
+
+def test_non_ascii_csrf_token_gives_400_not_500(client):
+    token(client)
+    resp = client.post("/login", data={"login": "a", "password": "b", "csrf_token": "подделка"})
+    assert resp.status_code == 400
