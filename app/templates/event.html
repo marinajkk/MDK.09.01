@@ -5,7 +5,11 @@
 <h1>{{ event['title'] }}</h1>
 <p><span class="chip">{{ event['event_date'] }}</span> <span class="muted">{{ event['place'] }}</span></p>
 <p>{{ event['description'] }}</p>
+{% if event['event_date'] >= today %}
 <p><a class="btn" href="{{ url_for('main.new_request', event_id=event['id']) }}">Подать заявку</a></p>
+{% else %}
+<p class="muted">Мероприятие уже прошло, заявки не принимаются.</p>
+{% endif %}
 {% if reviews %}
 <h2>Отзывы участников</h2>
 {% for rv in reviews %}

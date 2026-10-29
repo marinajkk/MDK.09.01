@@ -1,3 +1,5 @@
+from datetime import date
+
 from flask import Blueprint, abort, current_app, flash, g, redirect, render_template, request, url_for
 
 from .security import login_required
@@ -16,7 +18,7 @@ def event(event_id):
     item = current_app.events.get(event_id)
     if not item:
         abort(404)
-    return render_template("event.html", event=item, reviews=current_app.reviews.by_event(event_id))
+    return render_template("event.html", event=item, today=date.today().isoformat(), reviews=current_app.reviews.by_event(event_id))
 
 
 @bp.route("/requests")
@@ -43,7 +45,7 @@ def new_request():
         return redirect(url_for("main.my_requests"))
     errors = form.errors if request.method == "POST" else {}
     selected = request.values.get("event_id", "")
-    return render_template("new_request.html", events=app.events.all(), errors=errors, values=request.form, selected=selected, rooms=ROOMS, payments=PAYMENTS)
+    return render_template("new_request.html", events=app.events.upcoming(), errors=errors, values=request.form, selected=selected, rooms=ROOMS, payments=PAYMENTS)
 
 
 @bp.route("/requests/<int:request_id>/review", methods=["GET", "POST"])

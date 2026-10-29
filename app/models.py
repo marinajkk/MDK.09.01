@@ -31,6 +31,9 @@ class EventRepository:
     def all(self):
         return self.db.query("SELECT * FROM events ORDER BY event_date < date('now', 'localtime'), event_date")
 
+    def upcoming(self):
+        return self.db.query("SELECT * FROM events WHERE event_date >= date('now', 'localtime') ORDER BY event_date")
+
     def get(self, event_id):
         return self.db.one("SELECT * FROM events WHERE id = ?", (event_id,))
 
