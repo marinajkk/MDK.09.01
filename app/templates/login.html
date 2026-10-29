@@ -3,9 +3,10 @@
 {% block content %}
 <h1>Вход</h1>
 <form method="post" class="form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   {% if error %}<p class="err">{{ error }}</p>{% endif %}
-  <label>Логин <input name="login"></label>
-  <label>Пароль <input name="password" type="password"></label>
+  <label>Логин <input name="login" required maxlength="20"></label>
+  <label>Пароль <input name="password" type="password" required maxlength="128"></label>
   <button class="btn" type="submit">Войти</button>
 </form>
 {% endblock %}

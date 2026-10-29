@@ -10,4 +10,6 @@ th, td { border: 1px solid #bbb; padding: 6px 8px; text-align: left; }
 .err { color: #b00020; font-size: 14px; display: block; }
 .flash { background: #e6f4ea; padding: 8px 12px; }
 .btn { background: #1a4d8f; color: #fff; border: 0; padding: 8px 16px; text-decoration: none; cursor: pointer; }
+.logout { display: inline; }
+.logout button { background: none; border: 0; color: #1a4d8f; font: inherit; cursor: pointer; padding: 0; }
 .events { list-style: none; padding: 0; }

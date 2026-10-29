@@ -15,7 +15,7 @@
         <a href="{{ url_for('main.my_requests') }}">Мои заявки</a>
         <a href="{{ url_for('main.new_request') }}">Новая заявка</a>
         {% if g.user['role'] == 'admin' %}<a href="{{ url_for('admin.index') }}">Панель</a>{% endif %}
-        <a href="{{ url_for('auth.logout') }}">Выйти ({{ g.user['login'] }})</a>
+        <form class="logout" method="post" action="{{ url_for('auth.logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit">Выйти ({{ g.user['login'] }})</button></form>
       {% else %}
         <a href="{{ url_for('auth.login') }}">Войти</a>
         <a href="{{ url_for('auth.register') }}">Регистрация</a>
