@@ -37,7 +37,7 @@ def test_participant_cannot_open_admin(client):
 def test_user_sees_only_own_requests(client):
     register(client)
     login(client)
-    post(client, "/requests/new", {"event_id": "1", "room": "Зал А", "payment": "Карта", "seats": "1"})
+    post(client, "/requests/new", {"event_id": "1", "room": "Малый зал", "payment": "Банковская карта", "seats": "1"})
     logout(client)
     register(client, login="other_user", email="other@example.ru", phone="+79170000000")
     login(client, "other_user")

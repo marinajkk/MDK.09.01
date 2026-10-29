@@ -149,3 +149,15 @@ main { animation: appear .25s ease both; }
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
+
+/* ПР 9: фильтры, карточки заявок, отзывы */
+.filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 12px; }
+.filters label { font-weight: 600; font-size: 14px; }
+.filters select, .filters input { display: block; margin-top: 4px; padding: 9px 10px; font: inherit; border: 1px solid #c9bfab; border-radius: 8px; background: #fff; }
+.req-head { display: flex; justify-content: space-between; align-items: center; }
+.req-card h2 { font-size: 18px; }
+.review { margin: 0 0 12px; padding: 10px 16px; background: var(--card); border-left: 4px solid var(--accent); border-radius: 6px; }
+.review p { margin: 4px 0; }
+.form select[aria-invalid], .form input[aria-invalid], .form textarea[aria-invalid] { border-color: #b3261e; }
+td.action { white-space: nowrap; }
+@media (max-width: 640px) { .filters label, .filters select, .filters input { width: 100%; } td.action { display: block; } }
