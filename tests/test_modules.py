@@ -1,4 +1,4 @@
-from conftest import login, register
+from conftest import login, logout, post, register
 
 
 def test_register_ok(client, app):
@@ -38,7 +38,7 @@ def test_login_wrong_password(client):
 def test_create_request_and_see_it(client):
     register(client)
     login(client)
-    client.post("/requests/new", data={"event_id": "1", "room": "Зал А", "payment": "Карта", "seats": "2"})
+    post(client, "/requests/new", {"event_id": "1", "room": "Зал А", "payment": "Карта", "seats": "2"})
     html = client.get("/requests").get_data(as_text=True)
     assert "Цифровая школа" in html and "новая" in html
 
@@ -51,8 +51,8 @@ def test_request_requires_login(client):
 def test_admin_sees_all_requests(client):
     register(client)
     login(client)
-    client.post("/requests/new", data={"event_id": "2", "room": "Зал Б", "payment": "Наличные", "seats": "1"})
-    client.get("/logout")
+    post(client, "/requests/new", {"event_id": "2", "room": "Зал Б", "payment": "Наличные", "seats": "1"})
+    logout(client)
     login(client, "admin", "Admin2026!")
     html = client.get("/admin/").get_data(as_text=True)
     assert "Умный город" in html
