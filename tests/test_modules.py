@@ -1,3 +1,5 @@
+from datetime import date
+
 from conftest import login, logout, post, register
 
 
@@ -62,3 +64,10 @@ def test_admin_forbidden_for_participant(client):
     register(client)
     login(client)
     assert client.get("/admin/").status_code == 403
+
+
+def test_upcoming_events_go_first(app):
+    dates = [e["event_date"] for e in app.events.all()]
+    today = date.today().isoformat()
+    future = [d for d in dates if d >= today]
+    assert dates[:len(future)] == future

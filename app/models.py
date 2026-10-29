@@ -29,7 +29,7 @@ class EventRepository:
         self.db = db
 
     def all(self):
-        return self.db.query("SELECT * FROM events ORDER BY event_date")
+        return self.db.query("SELECT * FROM events ORDER BY event_date < date('now', 'localtime'), event_date")
 
     def get(self, event_id):
         return self.db.one("SELECT * FROM events WHERE id = ?", (event_id,))
