@@ -14,6 +14,10 @@ EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$")
 PHONE_RE = re.compile(r"^(\+7|8)\d{10}$")
 
 
+ROOMS = ["Малый зал", "Большой зал", "Конференц-зал", "Переговорная"]
+PAYMENTS = ["Банковская карта", "Наличные на месте", "Перевод по счёту"]
+
+
 class FormValidator:
     def __init__(self, data):
         self.data = data
@@ -63,10 +67,20 @@ class RequestForm(FormValidator):
         event_id = self.field("event_id")
         if not event_id.isdigit() or not self.events.get(int(event_id)):
             self.fail("event_id", "Выберите мероприятие")
-        if len(self.field("room")) < 2:
-            self.fail("room", "Укажите помещение")
-        if len(self.field("payment")) < 2:
-            self.fail("payment", "Укажите способ оплаты")
+        if self.field("room") not in ROOMS:
+            self.fail("room", "Выберите помещение из списка")
+        if self.field("payment") not in PAYMENTS:
+            self.fail("payment", "Выберите способ оплаты из списка")
         seats = self.field("seats")
         if not seats.isdigit() or not 1 <= int(seats) <= 50:
             self.fail("seats", "Количество мест: от 1 до 50")
+
+
+class ReviewForm(FormValidator):
+    def __init__(self, data):
+        super().__init__(data)
+        rating = self.field("rating")
+        if not rating.isdigit() or not 1 <= int(rating) <= 5:
+            self.fail("rating", "Поставьте оценку от 1 до 5")
+        if len(self.field("body")) < 10:
+            self.fail("body", "Напишите отзыв не короче 10 символов")

@@ -2,7 +2,7 @@
 {% block title %}Новая заявка{% endblock %}
 {% block content %}
 <h1>Новая заявка</h1>
-<form method="post" class="form">
+<form method="post" class="form" data-validate novalidate>
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   <label>Мероприятие
     <select name="event_id" required>
@@ -14,11 +14,17 @@
     {% if errors.event_id %}<span class="err">{{ errors.event_id }}</span>{% endif %}
   </label>
   <label>Помещение
-    <input name="room" required minlength="2" maxlength="50" value="{{ values.get('room', '') }}">
+    <select name="room" required>
+      <option value="">Выберите</option>
+      {% for r in rooms %}<option {% if values.get('room') == r %}selected{% endif %}>{{ r }}</option>{% endfor %}
+    </select>
     {% if errors.room %}<span class="err">{{ errors.room }}</span>{% endif %}
   </label>
   <label>Способ оплаты
-    <input name="payment" required minlength="2" maxlength="30" value="{{ values.get('payment', '') }}">
+    <select name="payment" required>
+      <option value="">Выберите</option>
+      {% for p in payments %}<option {% if values.get('payment') == p %}selected{% endif %}>{{ p }}</option>{% endfor %}
+    </select>
     {% if errors.payment %}<span class="err">{{ errors.payment }}</span>{% endif %}
   </label>
   <label>Количество мест
