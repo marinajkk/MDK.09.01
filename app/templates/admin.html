@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Панель администратора{% endblock %}
+{% block content %}
+<h1>Все заявки</h1>
+<table>
+  <tr><th>№</th><th>Участник</th><th>Мероприятие</th><th>Помещение</th><th>Оплата</th><th>Мест</th><th>Статус</th><th>Создана</th></tr>
+  {% for r in items %}
+  <tr>
+    <td>{{ r['id'] }}</td><td>{{ r['user_name'] }}</td><td>{{ r['event_title'] }}</td><td>{{ r['room'] }}</td>
+    <td>{{ r['payment'] }}</td><td>{{ r['seats'] }}</td><td>{{ r['status'] }}</td><td>{{ r['created_at'] }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
