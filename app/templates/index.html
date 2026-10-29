@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Ближайшие мероприятия</h1>
+<ul class="events">
+  {% for e in events %}
+  <li>
+    <h2><a href="{{ url_for('main.event', event_id=e['id']) }}">{{ e['title'] }}</a></h2>
+    <p>{{ e['event_date'] }}, {{ e['place'] }}</p>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Новая заявка{% endblock %}
+{% block content %}
+<h1>Новая заявка</h1>
+<form method="post" class="form" novalidate>
+  <label>Мероприятие
+    <select name="event_id">
+      <option value="">Выберите</option>
+      {% for e in events %}
+      <option value="{{ e['id'] }}" {% if selected == e['id']|string %}selected{% endif %}>{{ e['title'] }} ({{ e['event_date'] }})</option>
+      {% endfor %}
+    </select>
+    {% if errors.event_id %}<span class="err">{{ errors.event_id }}</span>{% endif %}
+  </label>
+  <label>Помещение
+    <input name="room" value="{{ values.get('room', '') }}">
+    {% if errors.room %}<span class="err">{{ errors.room }}</span>{% endif %}
+  </label>
+  <label>Способ оплаты
+    <input name="payment" value="{{ values.get('payment', '') }}">
+    {% if errors.payment %}<span class="err">{{ errors.payment }}</span>{% endif %}
+  </label>
+  <label>Количество мест
+    <input name="seats" value="{{ values.get('seats', '1') }}">
+    {% if errors.seats %}<span class="err">{{ errors.seats }}</span>{% endif %}
+  </label>
+  <button class="btn" type="submit">Отправить заявку</button>
+</form>
+{% endblock %}
