@@ -2,7 +2,7 @@
 {% block title %}Вход{% endblock %}
 {% block content %}
 <h1>Вход</h1>
-<form method="post" class="form">
+<form method="post" class="form" data-validate novalidate>
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   {% if error %}<p class="err">{{ error }}</p>{% endif %}
   <label>Логин <input name="login" required maxlength="20"></label>

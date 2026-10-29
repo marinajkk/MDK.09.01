@@ -2,7 +2,7 @@
 {% block title %}Регистрация{% endblock %}
 {% block content %}
 <h1>Регистрация</h1>
-<form method="post" class="form">
+<form method="post" class="form" data-validate novalidate>
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   <label>Логин
     <input name="login" required minlength="3" maxlength="20" pattern="[A-Za-z0-9_]+" value="{{ values.get('login', '') }}">
